@@ -55,7 +55,7 @@ public class GameThread implements Runnable{
 		
 		while(true){
 			
-			if (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_TRUE){
+			if (GLFW.glfwWindowShouldClose(window)) {
 				GLFW.glfwDestroyWindow(window);
 				break;
 			}
@@ -87,7 +87,7 @@ public class GameThread implements Runnable{
 		//setup error callback
 		GLFWErrorCallback.createPrint(System.err).set();
 		
-		if(glfwInit() == GL_FALSE)
+		if (!glfwInit())
 		{
 			// TODO: Handle error
 		}
@@ -109,7 +109,11 @@ public class GameThread implements Runnable{
 		glActiveTexture(GL_TEXTURE1);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		
+
+		//mouse motion
+		if (GLFW.glfwRawMouseMotionSupported())
+			GLFW.glfwSetInputMode(window, GLFW.GLFW_RAW_MOUSE_MOTION, GLFW.GLFW_TRUE);
+		else System.out.println("Raw mouse not supported; use arrow keys instead.");
 		
 		
 		GL11.glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
@@ -124,13 +128,6 @@ public class GameThread implements Runnable{
 		GameStateManager.setWindow(window);
 		GLFW.glfwSetKeyCallback(GameStateManager.window, Input.controls);
 		GameStateManager.goTo(GameStateManager.Title);
-		
-		
-		
-		
-		
-		
-
 	}
 	
 	private void update(){

@@ -13,9 +13,9 @@ public class GameStateManager {
 	public static GameState lastState;
 	public static long window;
 	
-	public static GameState Play = new Play();
-	public static GameState Title = new Title();
-	public static GameState Pause = new Pause();
+	public static Play Play = new Play();
+	public static Title Title = new Title();
+	public static Pause Pause = new Pause();
 	
 	
 	private GameStateManager(){}
@@ -39,9 +39,7 @@ public class GameStateManager {
 		
 		for (Updateable u: currentState.getUpdateables()){
 			
-			if(!u.isUpdatePaused()){
-				u.update();
-			}
+			u.update();
 			
 		}
 	}

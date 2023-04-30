@@ -34,7 +34,9 @@ public class Play extends GameState{
 	public boolean pKeyDown = false;
 	
 	public boolean pathRevealed = false;
-	
+
+	public double mouseSensitivity = 0.2D;
+
 	@Override
 	public void onStart() {
 		

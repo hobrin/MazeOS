@@ -1,5 +1,6 @@
 package screen;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
@@ -12,9 +13,13 @@ import main.Renderable;
 import main.Updateable;
 import math.Matrix4f;
 import math.Vector3f;
+import org.lwjgl.system.windows.MOUSEINPUT;
+import states.GameState;
+import states.Play;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
 public class Player implements Updateable{
@@ -23,6 +28,7 @@ public class Player implements Updateable{
 	
 	
 	public boolean paused = false;
+	public boolean prevEscapePressed = false;
 	
 	public Vector3f location;
 	public Vector3f rot = new Vector3f(45.0f,135.0f,0.0f);
@@ -65,13 +71,14 @@ public class Player implements Updateable{
 
 	@Override
 	public void update() {
-		
-		
+		if (Input.keys[GLFW.GLFW_KEY_ESCAPE] && !this.prevEscapePressed) {
+			this.paused = !this.paused;
+		}
+		this.prevEscapePressed = Input.keys[GLFW.GLFW_KEY_ESCAPE];
+
 		if (paused){
 			return;
 		}
-		
-	
 		
 		updateCamera();
 		
@@ -215,7 +222,17 @@ public class Player implements Updateable{
 		
 		
 		//camera movement
-		
+		DoubleBuffer mouseX = BufferUtils.createDoubleBuffer(1);
+		DoubleBuffer mouseY = BufferUtils.createDoubleBuffer(1);
+		GLFW.glfwGetCursorPos(GameStateManager.window, mouseX, mouseY);
+		mouseX.rewind(); mouseY.rewind();
+		int newMouseX = (int) mouseX.get(0) - GameThread.WIDTH / 2;
+		int newMouseY = (int) mouseY.get(0) - GameThread.HEIGHT / 2;
+		GLFW.glfwSetCursorPos(GameStateManager.window, GameThread.WIDTH / 2, GameThread.HEIGHT / 2);
+		rot.x += newMouseY * GameStateManager.Play.mouseSensitivity;
+		rot.y += newMouseX * GameStateManager.Play.mouseSensitivity;
+
+
 		if(Input.keys[GLFW.GLFW_KEY_LEFT]){
 			rot.y-=1.5f;
 		}
